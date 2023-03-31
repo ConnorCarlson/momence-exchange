@@ -1,44 +1,26 @@
-import { TableBody, TableHead } from '@mui/material';
-import React from 'react';
-import './App.css';
-import { StyledTable } from './components/table/styled/styledTable';
-import { CurrencyRate, useExchangeRates } from './hooks/useExchangeRates';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { useExchangeRates } from "./hooks/useExchangeRates";
+import { Container } from "@mui/system";
+import ExchangeDataTable from "./components/table";
+import Header from "./components/header";
+import ConverterForm from "./components/converterForm";
+import StyledSpinner from "./components/styledSpinner";
 
 function App() {
-  const {data, isLoading, error} = useExchangeRates();
-  console.log(data);
-  if(isLoading || !data) {
-    return <></>;
+  const { data, isLoading, error } = useExchangeRates();
+  if (isLoading || !data) {
+    return <StyledSpinner />;
   }
 
-  if(error) {
+  if (error) {
     return <></>;
   }
 
   return (
-
-    <div>
-      <header>
-        CHZ Exchange rates
-      </header>
-      <StyledTable>
-        <TableHead>
-
-        </TableHead>
-        <TableBody>
-          {data.map((rate: CurrencyRate) => (
-          <tr key={rate.country}>
-            <td>{rate.country}</td>
-            <td>{rate.amount}</td>
-            <td>{rate.currencyName}</td>
-            <td>{rate.rate.toFixed(2)}</td>
-          </tr>
-        ))}
-          </TableBody>
-      </StyledTable>
-    </div>
-
+    <Container maxWidth="sm">
+      <Header />
+      <ConverterForm data={data} />
+      <ExchangeDataTable data={data} />
+    </Container>
   );
 }
 
