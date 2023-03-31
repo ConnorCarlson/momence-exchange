@@ -1,10 +1,11 @@
 import { Grid, TextField } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { CurrencyRate } from "../../hooks/useExchangeRates";
 import { ElementContainer } from "../elementContainer";
 import {
   ConvertedOutput,
   FloatInput,
+  PrimaryButton,
   SearchableDropdown,
   StartAdornment,
 } from "./styledComponents";
@@ -17,6 +18,7 @@ const strings = {
   amountFromLabel: "Amount to convert",
   currencyFormLabel: "Convert to",
   czkSymbol: "Kč",
+  button: "Convert",
 };
 
 const getMoneyFormat = (code: string, amount: number) => {
@@ -34,7 +36,7 @@ const ConverterForm = (props: Props) => {
   const [currencyLabel, setCurrencyLabel] = useState("");
   const [convertedAmount, setConvertedAmount] = useState("");
 
-  useEffect(() => {
+  const convertOnClick = () => {
     if (currencyRate && currencyAmount) {
       const { amount, rate, currencyCode } = currencyRate;
       const converted = (+currencyAmount * amount) / rate;
@@ -42,7 +44,7 @@ const ConverterForm = (props: Props) => {
     } else {
       setConvertedAmount("");
     }
-  }, [currencyRate, currencyAmount, setConvertedAmount]);
+  }
 
   const handleAmountInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -70,7 +72,7 @@ const ConverterForm = (props: Props) => {
   return (
     <ElementContainer>
       <Grid container spacing={2}>
-        <Grid item xs={5}>
+        <Grid item xs={4}>
           <FloatInput
             size="small"
             type="text"
@@ -84,7 +86,7 @@ const ConverterForm = (props: Props) => {
             }}
           />
         </Grid>
-        <Grid item xs={7}>
+        <Grid item xs={6}>
           <SearchableDropdown
             size="small"
             freeSolo
@@ -106,6 +108,9 @@ const ConverterForm = (props: Props) => {
             onInputChange={handleCurrencyDropdownInputChange}
             onChange={handleCurrencyDropdownValueChange}
           />
+        </Grid>
+        <Grid item xs={2}>
+            <PrimaryButton variant="outlined" onClick={convertOnClick}>{strings.button}</PrimaryButton>
         </Grid>
       </Grid>
       <ConvertedOutput>{convertedAmount}</ConvertedOutput>
